@@ -1,6 +1,6 @@
 # IMO 2026 Problem 3 — Stick-Cutting Game
 
-A technical companion note for **Problem 3 of the 2026 International Mathematical Olympiad**, focused on the mathematical structure behind the game: pairing, exploitable symmetry, the optimal powers-of-two construction, and the guaranteed value of the first player.
+A self-contained technical companion note for **Problem 3 of the 2026 International Mathematical Olympiad**, focused on the mathematical structure behind the game: pairing, exploitable symmetry, the optimal powers-of-two construction, and the guaranteed value of Player 1.
 
 - Official problem page: https://www.imo-official.org/problems/
 - Problem: IMO 2026, Problem 3
@@ -8,312 +8,409 @@ A technical companion note for **Problem 3 of the 2026 International Mathematica
 
 ## Problem
 
-Let `n` be a positive integer. Player 1 first marks at most `n` points on a stick of length `1`. Player 2 sees those marks and then marks at most `n` additional points, all distinct from the earlier marks. The stick is cut at every marked point. The players then alternate claiming unclaimed pieces, with Player 1 choosing first. Each player wants to maximize the total length obtained.
+Let $n$ be a positive integer. Player 1 first marks at most $n$ points on a stick of length $1$. Player 2 sees those marks and then marks at most $n$ additional points, all distinct from the earlier marks. The stick is cut at every marked point. The players then alternate claiming unclaimed pieces, with Player 1 choosing first. Each player wants to maximize the total length obtained.
 
-For each `n`, determine the largest value `c_n` that Player 1 can guarantee regardless of Player 2's play.
+For each $n$, determine the largest value $c_n$ that Player 1 can guarantee regardless of Player 2's play.
 
 ## Main result
 
 The exact value is
 
-$$
+```math
 \boxed{c_n=\frac{2^n}{2^{n+1}-1}}.
-$$
+```
 
-Equivalently, if
+Set
 
-$$
-\delta=\frac{1}{2^{n+1}-1},
-$$
+```math
+\delta=\frac{1}{2^{n+1}-1}.
+```
 
-then
+Then
 
-$$
+```math
 c_n=\frac{1+\delta}{2}.
-$$
+```
 
-The quantity `δ` is also the smallest advantage in total length that Player 1 can force over Player 2 under optimal play.
+Thus, under optimal play, the smallest advantage in total length that Player 1 can guarantee over Player 2 is exactly $\delta$.
 
-## The drafting stage
+## 1. The claiming stage
 
 Suppose the final piece lengths, in non-increasing order, are
 
-$$
-x_1\ge x_2\ge \cdots \ge x_m.
-$$
+```math
+x_1\ge x_2\ge\cdots\ge x_m>0.
+```
 
-Because the players alternately choose any remaining piece, optimal play at the drafting stage gives Player 1 the odd-indexed pieces in the sorted list:
+The value of the claiming stage is exactly
 
-$$
-x_1+x_3+x_5+\cdots.
-$$
+```math
+O=x_1+x_3+x_5+\cdots.
+```
 
-Define the alternating difference
+To see this, if Player 1 always takes a longest remaining piece, then before Player 1's $j$-th turn at most $2j-2$ pieces have been removed. Therefore at least one of the largest $2j-1$ original pieces is still available, so Player 1 receives a piece of length at least $x_{2j-1}$. Hence Player 1 can guarantee at least $O$.
 
-$$
-A=x_1-x_2+x_3-x_4+\cdots.
-$$
+Conversely, if Player 2 always takes a longest remaining piece, then before Player 2's $j$-th turn at most $2j-1$ pieces have been removed. Therefore Player 2 receives a piece of length at least $x_{2j}$. Player 2 can consequently guarantee at least
 
-Since the total length is `1`, Player 1's final share is
+```math
+E=x_2+x_4+x_6+\cdots,
+```
 
-$$
-\frac{1+A}{2}.
-$$
+leaving Player 1 at most $1-E=O$. Thus the value is exactly $O$.
 
-So the problem reduces to controlling the smallest possible value of `A` after Player 2 refines Player 1's initial partition.
+Define the alternating gap
 
-## Player 2's basic idea: create counterparts
+```math
+A=x_1-x_2+x_3-x_4+\cdots,
+```
 
-Player 2 benefits from symmetry. If the final pieces can be arranged into equal pairs, then whenever Player 1 chooses one piece, Player 2 can take its identical counterpart.
+where a missing final even-indexed term is interpreted as zero. Since $O+E=1$ and $O-E=A$,
+
+```math
+O=\frac{1+A}{2}.
+```
+
+The marking stage can therefore be viewed as a minimax problem over the final alternating gap $A$.
+
+## 2. Player 2's basic idea: create counterparts
+
+Player 2 benefits from symmetry. If the final pieces can be organized into equal pairs, Player 2 can answer each selection by Player 1 with its identical counterpart.
 
 That produces an exact tie:
 
-$$
+```math
 \boxed{\frac12:\frac12}.
-$$
+```
 
-This observation already explains two simple ways Player 1 can lose the first-mover advantage.
+This immediately gives two simple failure modes for Player 1.
 
 ### Failure case 1: Player 1 creates too few pieces
 
-If Player 1 creates at most `n` initial pieces, Player 2 can bisect every one of them. For a piece of length `x`,
+If Player 1 creates at most $n$ initial pieces, Player 2 can bisect every one of them. For a piece of length $x$,
 
-$$
+```math
 x\longrightarrow \frac{x}{2}+\frac{x}{2}.
-$$
+```
 
 Every piece now has an identical counterpart, so Player 2 can force a tie.
 
 ### Failure case 2: Player 1 creates two equal pieces
 
-Even if Player 1 uses all `n` cuts and creates `n+1` pieces, two equal pieces are already enough to give Player 2 a complete pairing strategy.
+Even if Player 1 uses all $n$ marks and creates $n+1$ pieces, two equal pieces are already enough to give Player 2 a complete pairing strategy.
 
 Suppose two initial pieces have length
 
-$$
+```math
 x,\qquad x.
-$$
+```
 
-They already form one pair. At most `n-1` other pieces remain. Player 2 can bisect each of those using at most `n-1` cuts, turning every remaining piece into another equal pair.
+They already form one pair. At most $n-1$ other pieces remain. Player 2 can bisect each of those using at most $n-1$ cuts, producing equal pairs everywhere else.
 
-Again, the entire board can be paired, so Player 2 forces
+Again Player 2 forces
 
-$$
+```math
 \boxed{\frac12:\frac12}.
-$$
+```
 
 The lesson is that Player 1 must avoid exploitable symmetry from the beginning.
 
-## Player 1's optimal construction
+## 3. Player 1's optimal construction
 
-Player 1 chooses `n+1` initial pieces proportional to successive powers of two:
+Player 1 chooses $n+1$ initial pieces proportional to successive powers of two:
 
-$$
+```math
 1,2,4,\ldots,2^n.
-$$
+```
 
 Let
 
-$$
+```math
 D=2^{n+1}-1.
-$$
+```
 
-The normalized piece lengths are therefore
+The normalized piece lengths are
 
-$$
-\frac1D,\quad \frac2D,\quad \frac4D,\quad \ldots,\quad \frac{2^n}{D}.
-$$
+```math
+\frac1D,\quad \frac2D,\quad \frac4D,\quad\ldots,\quad\frac{2^n}{D}.
+```
 
 They sum to one because
 
-$$
+```math
 1+2+4+\cdots+2^n=2^{n+1}-1=D.
-$$
+```
 
 This construction guarantees Player 1 at least
 
-$$
+```math
 \boxed{\frac{2^n}{2^{n+1}-1}}.
-$$
+```
 
 ![Optimal initial cuts for n=1 and n=2](figures/optimal-initial-cuts.svg)
 
-## Worked example: `n = 1`
+### Worked example: $n=1$
 
 Player 1 begins with
 
-$$
-\frac13,\qquad \frac23.
-$$
+```math
+\frac13,\qquad\frac23.
+```
 
-If Player 2 does not cut, Player 1 simply takes `2/3`.
+If Player 2 does not cut, Player 1 simply takes $2/3$. If Player 2 bisects the larger piece,
 
-If Player 2 bisects the larger piece,
+```math
+\frac23\longrightarrow\frac13+\frac13,
+```
 
-$$
-\frac23\longrightarrow \frac13+\frac13,
-$$
+the three pieces are all $1/3$, and Player 1 still receives two of them. Hence
 
-then the three pieces are all `1/3`, and Player 1 still receives two of them. Hence
-
-$$
+```math
 \boxed{c_1=\frac23}.
-$$
+```
 
-This is a useful example of a legal response that changes the board but does not improve Player 2's final outcome.
+This is the simplest example of a legal response that changes the board but gives Player 2 no improvement at all.
 
-## Worked example: `n = 2`
+### Worked example: $n=2$
 
 Player 1 begins with
 
-$$
-\frac47,\qquad \frac27,\qquad \frac17.
-$$
+```math
+\frac47,\qquad\frac27,\qquad\frac17.
+```
 
 A natural response is to bisect the largest piece:
 
-$$
-\frac47\longrightarrow \frac27+\frac27.
-$$
+```math
+\frac47\longrightarrow\frac27+\frac27.
+```
 
 If Player 2 stops there, the pieces are
 
-$$
-\frac27,\quad \frac27,\quad \frac27,\quad \frac17,
-$$
+```math
+\frac27,\quad\frac27,\quad\frac27,\quad\frac17,
+```
 
-and Player 1 can secure `4/7`.
+and Player 1 can secure $4/7$.
 
-Player 2 still has another cut. For example,
+Player 2 still has another permitted cut. For example,
 
-$$
-\frac27\longrightarrow \frac17+\frac17.
-$$
+```math
+\frac27\longrightarrow\frac17+\frac17.
+```
 
 The configuration changes again, but Player 1 can still secure
 
-$$
+```math
 \boxed{\frac47}.
-$$
+```
 
-The full theorem states that no legal response can push Player 1 below this value.
+The theorem below shows that no legal response can push Player 1 below this value.
 
-## Proof that Player 1 can guarantee the lower bound
+## 4. Proof that Player 1 can guarantee the lower bound
 
 Set
 
-$$
+```math
 \delta=\frac{1}{2^{n+1}-1}.
-$$
+```
 
-Player 1 uses the initial lengths
+Player 1 creates the pieces
 
-$$
+```math
 \delta,2\delta,4\delta,\ldots,2^n\delta.
-$$
+```
 
-After Player 2 makes at most `n` cuts, there are at most `2n+1` final pieces. Sort them in non-increasing order and, if necessary, append zero-length pieces so that there are exactly `2n+1` entries:
+It is convenient to scale all lengths by $1/\delta$. We therefore work with the initial lengths
 
-$$
-x_1\ge x_2\ge\cdots\ge x_{2n+1}\ge0.
-$$
+```math
+1,2,4,\ldots,2^n.
+```
 
-Pair consecutive entries
+Player 2 makes at most $n$ cuts, so there are at most $2n+1$ final pieces. Write their lengths in non-increasing order as
 
-$$
-(x_1,x_2),(x_3,x_4),\ldots,(x_{2n-1},x_{2n}),
-$$
+```math
+x_1\ge x_2\ge\cdots\ge x_m>0.
+```
 
-and pair the final piece `x_{2n+1}` with a dummy zero piece.
+Pair consecutive pieces:
 
-Tag each final piece by the original geometric piece from which it came. Build a graph whose vertices are the `n+1` original pieces together with the dummy zero vertex, and whose edges correspond to the `n+1` pairs above.
+```math
+(x_1,x_2),(x_3,x_4),\ldots.
+```
 
-The graph has `n+2` vertices and `n+1` edges. Therefore at least one connected component is a tree. Two-color that tree with signs `+1` and `-1`, and assign sign `0` to all vertices outside the tree.
+If $m$ is odd, append a single dummy piece of length $0$ and pair it with $x_m$.
 
-The signed sum of the original geometric lengths then has the form
+Now construct a multigraph. There is one vertex for each of the $n+1$ original pieces $1,2,4,\ldots,2^n$. If a dummy zero was added, include one additional dummy vertex. Each adjacent pair of final pieces gives an edge joining the vertices corresponding to the original pieces from which those two final pieces came; in the odd case the final edge may join an original vertex to the dummy vertex.
 
-$$
-\delta\left(\varepsilon_0+2\varepsilon_1+\cdots+2^n\varepsilon_n\right),
-\qquad
-\varepsilon_i\in\{-1,0,1\},
-$$
+If $m$ is even, the graph has $n+1$ vertices and $m/2\le n$ edges. If $m$ is odd, it has $n+2$ vertices and $(m+1)/2\le n+1$ edges. In either case the number of edges is strictly smaller than the number of vertices. Therefore at least one connected component is a tree.
 
-with not all coefficients zero. Because a largest nonzero power of two exceeds the sum of all smaller powers, this signed integer cannot vanish. Its absolute value is therefore at least `δ`.
+Choose such a tree component and two-color it. Assign a coefficient $\lambda_i\in\{-1,+1\}$ to each original vertex in this tree according to its color, and set $\lambda_i=0$ for all original vertices outside the tree. If the dummy vertex lies in the tree, color it as well but give it numerical weight $0$.
 
-On the other hand, every tree edge joins opposite signs, so its contribution is bounded by the corresponding difference between two consecutive sorted pieces. Hence
+Consider
 
-$$
-A=(x_1-x_2)+(x_3-x_4)+\cdots+x_{2n+1}\ge \delta.
-$$
+```math
+S=\sum_{i=0}^{n}\lambda_i2^i.
+```
 
-Therefore Player 1 receives at least
+This integer is nonzero. If $j$ is the largest index for which $\lambda_j\ne0$, then
 
-$$
-\frac{1+A}{2}
-\ge
-\frac{1+\delta}{2}
-=
-\frac{2^n}{2^{n+1}-1}.
-$$
+```math
+|S|\ge 2^j-\sum_{i=0}^{j-1}2^i=1.
+```
 
-## Proof that Player 2 can hold Player 1 to the upper bound
+On the other hand, all final pieces originating from the original piece $2^i$ have total length $2^i$. Hence $S$ is also the signed sum of all final pieces, using the coefficient of their original vertex.
 
-Now let Player 1 choose any initial partition.
+For every paired edge inside the chosen tree, the two endpoint coefficients are opposite, so that pair contributes either
 
-If there are at most `n` initial pieces, Player 2 bisects every piece and forces a tie, so the upper bound is immediate.
+```math
++(x_{2r-1}-x_{2r})
+```
 
-It remains to consider exactly `n+1` initial pieces. Consider all subset sums of their lengths. There are
+or
 
-$$
-2^{n+1}
-$$
+```math
+-(x_{2r-1}-x_{2r}).
+```
 
-subset sums, all lying in the interval `[0,1]`. After sorting them, two consecutive subset sums must differ by at most
+Pairs outside the chosen component contribute zero because both coefficients are zero. The same statement holds for the last pair $(x_m,0)$ if the dummy vertex is used. Therefore
 
-$$
+```math
+|S|\le (x_1-x_2)+(x_3-x_4)+\cdots=A.
+```
+
+Since $|S|\ge1$, we obtain
+
+```math
+A\ge1
+```
+
+at the scaled level. Returning to the original scale multiplies every length, and therefore $A$, by $\delta$. Thus
+
+```math
+A\ge\delta.
+```
+
+By the claiming-stage formula, Player 1 receives at least
+
+```math
+\frac{1+A}{2}\ge\frac{1+\delta}{2}=\frac{2^n}{2^{n+1}-1}.
+```
+
+This proves the lower bound.
+
+## 5. Proof that Player 2 can hold Player 1 to the upper bound
+
+Let Player 1 choose any initial partition.
+
+If there are at most $n$ initial pieces, Player 2 bisects every piece and forces a tie. So only the case of exactly $n+1$ initial pieces remains.
+
+Let their lengths be
+
+```math
+a_1,a_2,\ldots,a_{n+1},\qquad \sum_{i=1}^{n+1}a_i=1.
+```
+
+Consider all $2^{n+1}$ subset sums
+
+```math
+\sum_{i\in I}a_i,\qquad I\subseteq\{1,2,\ldots,n+1\}.
+```
+
+They all lie in $[0,1]$. Arrange these subset sums in non-decreasing order. Among the $2^{n+1}-1$ consecutive gaps, at least one has size at most
+
+```math
 \delta=\frac{1}{2^{n+1}-1}.
-$$
+```
 
-Remove any initial pieces common to both subsets. This leaves two disjoint families of initial pieces whose total lengths differ by at most `δ`.
+Choose two distinct subsets realizing such a gap. Remove all indices common to both subsets. This leaves disjoint subsets $P$ and $Q$ satisfying, after interchanging them if necessary,
 
-Player 2 now refines these two families into matched equal segments: align the two total lengths from the same starting point and cut whenever an endpoint from either family is encountered. This requires at most
+```math
+0\le \sum_{i\in P}a_i-\sum_{j\in Q}a_j\le\delta.
+```
 
-$$
-|A|+|B|-1
-$$
+Write
 
-cuts for the two selected families. Every initial piece outside those families is simply bisected once.
+```math
+p=\sum_{i\in P}a_i,\qquad q=\sum_{j\in Q}a_j,
+```
 
-The total number of cuts is at most
+so that $0\le p-q\le\delta$.
 
-$$
-(|A|+|B|-1)+(n+1-|A|-|B|)=n.
-$$
+If $Q$ is empty, then $p\le\delta$. Player 2 leaves the pieces in $P$ as the residual part and bisects every piece outside $P$. Since $P$ is nonempty, this uses at most $n$ cuts. All non-residual pieces are now paired, while the total residual length is at most $\delta$.
 
-All resulting pieces can be paired with equal counterparts except for a remainder whose total length is at most `δ`. Consequently the alternating difference satisfies
+Now suppose both $P$ and $Q$ are nonempty. Player 2 refines the pieces from these two families into matched equal segments. Repeatedly compare one currently unpaired piece from each family:
 
-$$
-A\le\delta,
-$$
+- if their lengths are equal, pair them and remove both from the comparison;
+- if one is longer, cut the longer one so that one new part equals the shorter piece, pair those equal parts, and return only the leftover remainder to its family.
 
-and Player 1 receives at most
+If $r=|P|+|Q|$, this procedure requires at most $r-1$ cuts: each cut completely exhausts at least one currently active original piece from the matching process. When the shorter-total family is exhausted, the total unmatched remainder is exactly
 
-$$
-\frac{1+A}{2}
-\le
-\frac{1+\delta}{2}
-=
-\frac{2^n}{2^{n+1}-1}.
-$$
+```math
+R=p-q\le\delta.
+```
 
-The lower and upper bounds coincide, completing the proof.
+Player 2 then bisects every original piece outside $P\cup Q$. There are $n+1-r$ such pieces, so the total number of cuts is at most
 
-## Strategic interpretation
+```math
+(r-1)+(n+1-r)=n.
+```
+
+Thus, in all cases, every final piece can be placed into an equal pair except for residual pieces whose total length is some $R\le\delta$.
+
+During the claiming stage, Player 2 can secure one member of every equal pair: whenever Player 1 takes one member of an untouched pair, Player 2 takes its mate; if Player 1 instead takes a residual piece, Player 2 can take one member of any untouched pair. Therefore Player 1 receives at most one half of the paired mass plus all of the residual mass:
+
+```math
+\frac{1-R}{2}+R=\frac{1+R}{2}\le\frac{1+\delta}{2}=\frac{2^n}{2^{n+1}-1}.
+```
+
+This proves the upper bound. Since the lower and upper bounds coincide,
+
+```math
+\boxed{c_n=\frac{2^n}{2^{n+1}-1}}.
+```
+
+## 6. A small but useful corollary: one permitted cut has no additional value
+
+The $n=1$ example already shows the idea clearly. Player 2 may use the available cut or leave it unused; either way Player 1 receives $2/3$. The cut is legal, but it provides no improvement.
+
+There is also a general version of this observation. Against Player 1's optimal powers-of-two construction, Player 2 can already attain the minimax upper bound using at most $n-1$ cuts.
+
+For $n\ge2$, Player 2 bisects each original piece
+
+```math
+2^k\delta\qquad (k=2,3,\ldots,n).
+```
+
+This uses exactly $n-1$ cuts. The resulting multiset contains equal pairs at every level from $2^{n-1}\delta$ down to $4\delta$, followed by the tail
+
+```math
+2\delta,\quad2\delta,\quad2\delta,\quad\delta.
+```
+
+All equal pairs cancel in the alternating gap, and the tail contributes
+
+```math
+2\delta-2\delta+2\delta-\delta=\delta.
+```
+
+Hence Player 1's share is exactly
+
+```math
+\frac{1+\delta}{2}=\frac{2^n}{2^{n+1}-1}.
+```
+
+For $n=1$, the same conclusion is reached with zero cuts.
+
+So Player 2 does not need the full cut budget to achieve the best possible response against Player 1's optimal construction. In that precise minimax sense, **at least one of Player 2's permitted cuts has no additional strategic value**.
+
+## 7. Strategic interpretation
 
 The game contains two complementary mechanisms:
 
 1. **Player 2 seeks counterparts.** Symmetry allows Player 2 to answer one move with an equivalent move and push the allocation toward parity.
 2. **Player 1 anticipates the response.** The powers-of-two construction is chosen so that Player 2's best refinement cannot erase Player 1's guaranteed advantage.
+
+The final corollary sharpens the second point. A robust opening does not necessarily eliminate the opponent's legal options. It can instead make part of the opponent's available action space strategically redundant.
 
 This is why the problem is useful as a simple model of robust strategic design: the quality of an opening move depends not only on its immediate effect, but on how well it survives the opponent's strongest response.
 
