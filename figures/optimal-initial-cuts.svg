@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Optimal initial cuts for n equals 1 and n equals 2</title>
+  <desc id="desc">For n equals 1 the unit stick is divided into lengths one third and two thirds. For n equals 2 it is divided into lengths four sevenths, two sevenths, and one seventh.</desc>
+  <rect width="1200" height="520" fill="white"/>
+  <g font-family="Georgia, 'Times New Roman', serif" fill="#111">
+    <text x="600" y="52" text-anchor="middle" font-size="34" font-weight="700">Optimal Initial Cuts by Player 1</text>
+
+    <text x="600" y="112" text-anchor="middle" font-size="27" font-weight="700">Case n = 1</text>
+    <line x1="120" y1="175" x2="1080" y2="175" stroke="#111" stroke-width="4"/>
+    <circle cx="120" cy="175" r="7" fill="#111"/>
+    <circle cx="1080" cy="175" r="7" fill="#111"/>
+    <line x1="440" y1="156" x2="440" y2="194" stroke="#111" stroke-width="4"/>
+    <text x="280" y="153" text-anchor="middle" font-size="25">1/3</text>
+    <text x="760" y="153" text-anchor="middle" font-size="25">2/3</text>
+    <text x="120" y="215" text-anchor="middle" font-size="21">0</text>
+    <text x="440" y="215" text-anchor="middle" font-size="21">1/3</text>
+    <text x="1080" y="215" text-anchor="middle" font-size="21">1</text>
+
+    <text x="600" y="300" text-anchor="middle" font-size="27" font-weight="700">Case n = 2</text>
+    <line x1="120" y1="370" x2="1080" y2="370" stroke="#111" stroke-width="4"/>
+    <circle cx="120" cy="370" r="7" fill="#111"/>
+    <circle cx="1080" cy="370" r="7" fill="#111"/>
+    <line x1="668.57" y1="351" x2="668.57" y2="389" stroke="#111" stroke-width="4"/>
+    <line x1="942.86" y1="351" x2="942.86" y2="389" stroke="#111" stroke-width="4"/>
+    <text x="394.29" y="348" text-anchor="middle" font-size="25">4/7</text>
+    <text x="805.71" y="348" text-anchor="middle" font-size="25">2/7</text>
+    <text x="1011.43" y="348" text-anchor="middle" font-size="25">1/7</text>
+    <text x="120" y="412" text-anchor="middle" font-size="21">0</text>
+    <text x="668.57" y="412" text-anchor="middle" font-size="21">4/7</text>
+    <text x="942.86" y="412" text-anchor="middle" font-size="21">6/7</text>
+    <text x="1080" y="412" text-anchor="middle" font-size="21">1</text>
+
+    <text x="600" y="478" text-anchor="middle" font-size="20">The segment lengths follow the geometric pattern 1, 2, 4, … after normalization.</text>
+  </g>
+</svg>
